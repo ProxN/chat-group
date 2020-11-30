@@ -1,12 +1,13 @@
 import { createConnection } from 'typeorm';
 import path from 'path';
 import { PROD, DB_USER, DB_HOST, DB_NAME, DB_PASS } from './constants';
+import UserEntity from './entities/User';
 
 const connectDB = async () => {
   await createConnection({
     type: 'postgres',
-    entities: [],
-    logging: !!PROD,
+    entities: [UserEntity],
+    logging: !PROD,
     synchronize: true,
     port: 5432,
     host: DB_HOST,
