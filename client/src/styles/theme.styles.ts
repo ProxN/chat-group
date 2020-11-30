@@ -35,7 +35,7 @@ const colors = {
   },
   text: {
     main: '#E0E0E0',
-    secondary: '##828282',
+    secondary: '#828282',
   },
   textInverse: {
     main: '#1b1f26',

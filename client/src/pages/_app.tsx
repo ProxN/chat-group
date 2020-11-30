@@ -5,6 +5,7 @@ import { ThemeProvider } from 'styled-components';
 import { ReactQueryCacheProvider, QueryCache } from 'react-query';
 import { AuthProvider, ProtectRoute } from '../context/authProvider';
 import { Theme, GlobalStyles } from '../styles';
+import Layout from '@components/Layout';
 
 const queryCache = new QueryCache({
   defaultConfig: {
@@ -24,7 +25,9 @@ const App = ({ Component, pageProps }: AppProps) => {
         <ThemeProvider theme={Theme}>
           <GlobalStyles />
           <ProtectRoute>
-            <Component {...pageProps} />
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
           </ProtectRoute>
         </ThemeProvider>
       </AuthProvider>
