@@ -8,6 +8,8 @@ import { Context } from '../../types/context';
 import validate, { isEmail } from '../../utils/validateAuth';
 import { generateToken, setTokenCookie } from '../../utils/token';
 import sendEmail from '../../utils/sendEmail';
+import Channel from '../../entities/Channel';
+import Members from '../../entities/Members';
 
 @ObjectType()
 export class AuthResponse extends ErrorResponse {
@@ -63,6 +65,16 @@ class AuthResolver {
     let user;
     try {
       user = await User.create({ email, password, name }).save();
+
+      let channel = await Channel.findOne({ where: { name: 'welcome' } });
+      if (!channel) {
+        channel = await Channel.create({ name: 'welcome', description: 'Welecome Channel' }).save();
+      }
+      await Members.create({
+        userId: user.id,
+        channelId: channel.id,
+      }).save();
+
       const token = generateToken(user.id);
       setTokenCookie(res, token);
     } catch (err) {

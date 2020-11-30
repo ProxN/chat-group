@@ -3,13 +3,14 @@ import { config } from 'dotenv';
 config({ path: './config.env' });
 
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import connections from './db';
 import { PORT } from './constants';
 import authChecker from './utils/authChecker';
-import { AuthResolver, UserResolver } from './resolvers';
+import { AuthResolver, UserResolver, ChannelResolver } from './resolvers';
 
 const main = async () => {
   await connections();
@@ -18,9 +19,16 @@ const main = async () => {
 
   app.use(cookieParser());
 
+  app.use(
+    cors({
+      origin: 'http://localhost:3000',
+      credentials: true,
+    })
+  );
+
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [AuthResolver, UserResolver],
+      resolvers: [AuthResolver, UserResolver, ChannelResolver],
       validate: false,
       authChecker,
     }),
