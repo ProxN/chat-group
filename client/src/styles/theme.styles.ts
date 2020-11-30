@@ -43,7 +43,7 @@ const colors = {
   },
   bg: '#252329',
   bgInverse: '#FAFAFE',
-  borderColor: 'rgba(191,196,209,.5)',
+  borderColor: 'rgba(69, 72, 80,.5)',
   borderFocus: 'rgba(39,44,54,.8)',
 };
 
