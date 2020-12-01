@@ -3,6 +3,7 @@ import 'normalize.css';
 import { AppProps } from 'next/app';
 import { ThemeProvider } from 'styled-components';
 import { ReactQueryCacheProvider, QueryCache } from 'react-query';
+import { ReactQueryDevtools } from 'react-query-devtools';
 import { AuthProvider, ProtectRoute } from '../context/authProvider';
 import { Theme, GlobalStyles } from '../styles';
 import Layout from '@components/Layout';
@@ -31,6 +32,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           </ProtectRoute>
         </ThemeProvider>
       </AuthProvider>
+      <ReactQueryDevtools />
     </ReactQueryCacheProvider>
   );
 };

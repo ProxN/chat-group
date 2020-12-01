@@ -11,3 +11,9 @@ export interface IUser {
   name: string;
   avatar?: string;
 }
+
+export interface IChannel {
+  id: string;
+  name: string;
+  description: string;
+}

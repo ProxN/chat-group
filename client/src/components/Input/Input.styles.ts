@@ -38,6 +38,7 @@ const InputBaseStyles = css<InputStylesProps>`
     width: ${fullWidth && '100%'};
     color: ${theme.colors.text.main};
     font-size: ${theme.fontSizes[1]}px;
+    background-color: ${theme.colors.secondary.light};
   `};
 
   :focus {
@@ -49,7 +50,6 @@ const InputBaseStyles = css<InputStylesProps>`
     opacity: 0.9;
   }
 
-  background-color: transparent;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;

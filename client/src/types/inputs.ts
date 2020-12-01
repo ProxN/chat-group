@@ -6,3 +6,8 @@ export type LoginInputs = {
 export interface RegisterInputs extends LoginInputs {
   name: string;
 }
+
+export type AddChannelInputs = {
+  name: string;
+  description: string;
+};

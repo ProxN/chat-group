@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 
 const Rotate = keyframes`
   0% {
@@ -14,16 +14,29 @@ const LoaderSvg = styled.svg`
   animation: ${Rotate} linear 1.3s infinite;
 `;
 
-const LoaderContainer = styled.div`
+const LoaderContainer = styled.div<LoaderProps>`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
+
+  svg {
+    ${({ size }) =>
+      size === 'small' &&
+      css`
+        height: 3.5rem;
+        width: 3.5rem;
+      `}
+  }
 `;
 
-const Loader: React.FC = () => {
+interface LoaderProps {
+  size?: 'small' | 'large';
+}
+
+const Loader: React.FC<LoaderProps> = ({ size }) => {
   return (
-    <LoaderContainer>
+    <LoaderContainer size={size}>
       <LoaderSvg xmlns='http://www.w3.org/2000/svg' width='71' height='71' viewBox='0 0 71 71'>
         <path
           fill='#2f80ed'

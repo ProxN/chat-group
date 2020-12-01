@@ -1,6 +1,8 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
+import Modal from '@components/Modal';
+import { useModalStore } from '@store/index';
 import Sidebar from './Sidebar';
 
 const Main = styled.main`
@@ -15,6 +17,7 @@ const Wrapper = styled.div`
 
 const authPaths = ['/login', '/register', '/forgot_password'];
 const Layout: React.FC = ({ children }) => {
+  const { isModalOpen } = useModalStore();
   const { pathname } = useRouter();
 
   if (authPaths.includes(pathname) || pathname.startsWith('/reset')) return <>{children}</>;
@@ -23,6 +26,7 @@ const Layout: React.FC = ({ children }) => {
     <Main>
       <Sidebar />
       <Wrapper>{children}</Wrapper>
+      {isModalOpen && <Modal />}
     </Main>
   );
 };
