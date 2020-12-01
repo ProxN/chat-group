@@ -11,7 +11,7 @@ export const SidebarContainer = styled.aside`
 
 export const Header = styled.div`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  padding: 1.7rem 2.5rem;
+  padding: 1.2rem 2.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;

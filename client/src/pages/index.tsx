@@ -1,5 +1,7 @@
+import ChatBox from '@components/ChatBox';
+
 const Index = () => {
-  return <h1>Hello World </h1>;
+  return <ChatBox />;
 };
 
 export default Index;
