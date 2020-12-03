@@ -1,4 +1,4 @@
-import { Arg, Authorized, Field, Mutation, ObjectType, Resolver } from 'type-graphql';
+import { Arg, Authorized, Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
 import Channel from '../../entities/Channel';
 import * as channelErrors from './errors';
 import { ErrorResponse } from '../../types/errorType';
@@ -34,6 +34,12 @@ class ChannelResolver {
     }
 
     return { channel };
+  }
+
+  @Query(() => [Channel])
+  async channels(): Promise<Channel[]> {
+    const channels = await Channel.find();
+    return channels;
   }
 }
 

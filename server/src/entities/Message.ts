@@ -4,29 +4,37 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import Message from './Message';
+import Channel from './Channel';
+import User from './User';
 
 @ObjectType()
 @Entity()
-class Channel extends BaseEntity {
+class Message extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @Field()
-  @Column({ unique: true })
-  name!: string;
+  @Column()
+  message!: string;
 
   @Field()
   @Column()
-  description!: string;
+  channelId!: string;
 
-  @OneToMany(() => Message, (message) => message.channel)
-  messages!: Message[];
+  @Field()
+  @Column()
+  userId!: string;
+
+  @ManyToOne(() => Channel, (channel) => channel.messages)
+  channel!: Channel;
+
+  @ManyToOne(() => User)
+  user!: User;
 
   @Field()
   @CreateDateColumn()
@@ -37,4 +45,4 @@ class Channel extends BaseEntity {
   updatedAt?: Date;
 }
 
-export default Channel;
+export default Message;
