@@ -17,3 +17,10 @@ export interface IChannel {
   name: string;
   description: string;
 }
+
+export interface IMesssage {
+  id: string;
+  message: string;
+  userId: string;
+  createdAt: string;
+}

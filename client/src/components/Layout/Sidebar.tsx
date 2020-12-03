@@ -1,10 +1,11 @@
+import { useEffect } from 'react';
 import Avatar from '@components/Avatar';
 import AddChannel from '@components/AddChannel';
 import Loader from '@components/Loader';
 import PlusSVG from '@assets/plus.svg';
 import ArrowDownSVG from '@assets/chevron.svg';
 import { useChannels } from '@hooks/useChannel';
-import { useModalStore } from '@store/index';
+import { useChannelStore, useModalStore } from '@store/index';
 import {
   SidebarContainer,
   Header,
@@ -29,6 +30,7 @@ const getAvatarText = (name: string): string => {
 const Sidebar = () => {
   const { data, isLoading } = useChannels();
   const { openModal } = useModalStore();
+  const { setSelectedChannel } = useChannelStore();
 
   const handleOpenModal = () => {
     openModal({
@@ -39,6 +41,12 @@ const Sidebar = () => {
       },
     });
   };
+
+  useEffect(() => {
+    if (!isLoading && data && data.length > 0) {
+      setSelectedChannel(data[0]);
+    }
+  }, [isLoading]);
 
   return (
     <SidebarContainer>

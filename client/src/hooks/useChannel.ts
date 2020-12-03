@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryCache } from 'react-query';
 import { AddChannelInputs } from 'types/inputs';
-import { IChannel, IError } from '../types';
+import { IChannel, IError, IMesssage } from '../types';
 import graphqlClient, { gql } from '../utils/graphqlClient';
 
 interface ChannelResponse extends IError {
@@ -63,4 +63,22 @@ export const useAddChannel = () => {
       onSettled: () => cache.invalidateQueries('channels'),
     }
   );
+};
+
+export const useMessages = (channelId: string) => {
+  return useQuery(['messages', channelId], async () => {
+    const res = await graphqlClient.request<{ getMessages: IMesssage[] }>(
+      gql`
+        query messages($channelId: String!) {
+          getMessages(channelId: $channelId) {
+            id
+            message
+            createdAt
+          }
+        }
+      `,
+      { channelId }
+    );
+    return res.getMessages;
+  });
 };
