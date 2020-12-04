@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import Avatar from '@components/Avatar';
 import { useChannelStore } from '@store/index';
+import { useSubscription, gql } from '@apollo/client';
+import { useQueryCache } from 'react-query';
 import { useSendMessage } from '@hooks/useChannel';
 import { IMesssage } from 'types';
 import {
@@ -17,9 +19,6 @@ import {
   DateSeparator,
   Line,
 } from './ChatBox.styles';
-import { useSubscription, gql } from '@apollo/client';
-import { useQueryCache } from 'react-query';
-import { useAuth } from 'context/authProvider';
 
 interface ChatBoxProps {
   messages?: Record<string, IMesssage[]>;
@@ -38,7 +37,6 @@ const messageSubscription = gql`
 const ChatBox: React.FC<ChatBoxProps> = ({ messages }) => {
   const { selectedChannel } = useChannelStore();
   const cache = useQueryCache();
-  const { user } = useAuth();
   const [mutate] = useSendMessage();
   useSubscription<{ onMessageAdded: IMesssage }>(messageSubscription, {
     onSubscriptionData: () => {
@@ -59,6 +57,10 @@ const ChatBox: React.FC<ChatBoxProps> = ({ messages }) => {
   useEffect(() => {
     messagesRef.current?.scrollIntoView();
   }, [messages]);
+
+  useEffect(() => {
+    cache.invalidateQueries(['messages', selectedChannel.id]);
+  }, [selectedChannel]);
 
   return (
     <Container>

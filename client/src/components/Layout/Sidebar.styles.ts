@@ -53,13 +53,14 @@ export const Channels = styled.div`
   flex-direction: column;
 `;
 
-export const Channel = styled.div`
+export const Channel = styled.div<{ active?: boolean }>`
   display: flex;
   align-items: center;
   transition: background 150ms ease-in-out;
   border-radius: 8px;
-  padding: 0.5rem 0;
+  margin: 0.5rem 0;
   cursor: pointer;
+  background: ${({ theme, active }) => (active ? theme.colors.secondary.light : 'transparent')};
   :hover {
     background: ${({ theme }) => theme.colors.secondary.light};
   }

@@ -6,6 +6,7 @@ import PlusSVG from '@assets/plus.svg';
 import ArrowDownSVG from '@assets/chevron.svg';
 import { useChannels } from '@hooks/useChannel';
 import { useChannelStore, useModalStore } from '@store/index';
+import { IChannel } from 'types';
 import {
   SidebarContainer,
   Header,
@@ -30,7 +31,7 @@ const getAvatarText = (name: string): string => {
 const Sidebar = () => {
   const { data, isLoading } = useChannels();
   const { openModal } = useModalStore();
-  const { setSelectedChannel } = useChannelStore();
+  const { setSelectedChannel, selectedChannel } = useChannelStore();
 
   const handleOpenModal = () => {
     openModal({
@@ -47,6 +48,10 @@ const Sidebar = () => {
       setSelectedChannel(data[0]);
     }
   }, [isLoading]);
+
+  const handleChannelClick = (channel: IChannel) => {
+    setSelectedChannel(channel);
+  };
 
   return (
     <SidebarContainer>
@@ -65,7 +70,11 @@ const Sidebar = () => {
             </form>
             <Channels>
               {data?.map((el) => (
-                <Channel key={el.id}>
+                <Channel
+                  onClick={() => handleChannelClick(el)}
+                  active={el.id === selectedChannel.id}
+                  key={el.id}
+                >
                   <ChannelAvatar>{getAvatarText(el.name)}</ChannelAvatar>
                   <ChannelName>{el.name}</ChannelName>
                 </Channel>
