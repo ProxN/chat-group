@@ -111,21 +111,20 @@ export const useSendMessage = () => {
         data
       );
       return res.createMessage;
-    },
-    {
-      onMutate: (data) => {
-        const prevMessages = cache.getQueryData(['messages', data.channelId]);
-
-        cache.setQueryData(['messages', data.channelId], (old) => [
-          ...(old as IMesssage[]),
-          { id: 'temp-message', createdAt: new Date().toISOString(), user, ...data },
-        ]);
-
-        channelId = data.channelId;
-
-        return () => cache.setQueryData(['messages', data.channelId], prevMessages);
-      },
-      onSettled: () => cache.invalidateQueries(['messages', channelId]),
     }
+    // {
+    //   onMutate: (data) => {
+    //     const prevMessages = cache.getQueryData(['messages', data.channelId]);
+
+    //     cache.setQueryData(['messages', data.channelId], (old) => [
+    //       ...(old as IMesssage[]),
+    //       { id: 'temp-message', createdAt: new Date().toISOString(), user, ...data },
+    //     ]);
+
+    //     channelId = data.channelId;
+
+    //     return () => cache.setQueryData(['messages', data.channelId], prevMessages);
+    //   },
+    // onSettled: () => cache.invalidateQueries(['messages', channelId]),
   );
 };

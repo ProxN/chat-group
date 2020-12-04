@@ -23,6 +23,14 @@ export const ChannelName = styled.span`
 export const Messages = styled.div`
   padding: 4rem 7rem;
   overflow-y: auto;
+  ::-webkit-scrollbar {
+    background: ${({ theme }) => theme.colors.secondary.light};
+    width: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.colors.secondary.dark};
+    border-radius: 8px;
+  }
 `;
 
 export const Message = styled.div`

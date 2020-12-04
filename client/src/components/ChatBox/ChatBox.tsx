@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import Avatar from '@components/Avatar';
 import { useChannelStore } from '@store/index';
@@ -16,15 +17,35 @@ import {
   DateSeparator,
   Line,
 } from './ChatBox.styles';
+import { useSubscription, gql } from '@apollo/client';
+import { useQueryCache } from 'react-query';
+import { useAuth } from 'context/authProvider';
 
 interface ChatBoxProps {
   messages?: Record<string, IMesssage[]>;
 }
 
+const messageSubscription = gql`
+  subscription {
+    onMessageAdded {
+      id
+      message
+      createdAt
+    }
+  }
+`;
+
 const ChatBox: React.FC<ChatBoxProps> = ({ messages }) => {
   const { selectedChannel } = useChannelStore();
+  const cache = useQueryCache();
+  const { user } = useAuth();
   const [mutate] = useSendMessage();
-
+  useSubscription<{ onMessageAdded: IMesssage }>(messageSubscription, {
+    onSubscriptionData: () => {
+      cache.invalidateQueries(['messages', selectedChannel.id]);
+    },
+  });
+  const messagesRef = useRef<HTMLDivElement | null>(null);
   const { control, handleSubmit, reset } = useForm<{ text: string }>();
 
   const onSubmit = (inputs: { text: string }) => {
@@ -34,6 +55,10 @@ const ChatBox: React.FC<ChatBoxProps> = ({ messages }) => {
     });
     reset();
   };
+
+  useEffect(() => {
+    messagesRef.current?.scrollIntoView();
+  }, [messages]);
 
   return (
     <Container>
@@ -46,14 +71,14 @@ const ChatBox: React.FC<ChatBoxProps> = ({ messages }) => {
           Object.keys(messages)
             .reverse()
             .map((el) => (
-              <>
+              <div key={el}>
                 <DateSeparator>
                   <Line />
                   <MessageDate>{el}</MessageDate>
                   <Line />
                 </DateSeparator>
-                {messages[el].reverse().map((msg) => (
-                  <Message>
+                {messages[el].map((msg) => (
+                  <Message key={msg.id}>
                     <Avatar />
                     <div>
                       <MessageInfo>
@@ -64,8 +89,10 @@ const ChatBox: React.FC<ChatBoxProps> = ({ messages }) => {
                     </div>
                   </Message>
                 ))}
-              </>
+              </div>
             ))}
+
+        <div ref={messagesRef} />
       </Messages>
       <form onSubmit={handleSubmit(onSubmit)} style={{ padding: '0 7rem' }}>
         <Controller
