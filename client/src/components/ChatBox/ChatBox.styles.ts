@@ -22,6 +22,7 @@ export const ChannelName = styled.span`
 
 export const Messages = styled.div`
   padding: 4rem 7rem;
+  overflow-y: auto;
 `;
 
 export const Message = styled.div`
@@ -65,8 +66,8 @@ export const MessageInput = styled(Input)`
 
 export const Line = styled.span`
   height: 1px;
-  background: #828282;
-
+  background: #3b3838;
+  opacity: 0.8;
   flex: 1;
 `;
 
@@ -75,4 +76,5 @@ export const DateSeparator = styled.div`
   width: 100%;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 0.5rem;
 `;

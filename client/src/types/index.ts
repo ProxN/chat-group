@@ -23,4 +23,5 @@ export interface IMesssage {
   message: string;
   userId: string;
   createdAt: string;
+  user: IUser;
 }

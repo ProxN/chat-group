@@ -11,3 +11,8 @@ export type AddChannelInputs = {
   name: string;
   description: string;
 };
+
+export type SendMessageInputs = {
+  text: string;
+  channelId: string;
+};

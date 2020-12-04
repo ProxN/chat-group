@@ -1,5 +1,7 @@
+import { useAuth } from 'context/authProvider';
 import { useMutation, useQuery, useQueryCache } from 'react-query';
-import { AddChannelInputs } from 'types/inputs';
+
+import { AddChannelInputs, SendMessageInputs } from 'types/inputs';
 import { IChannel, IError, IMesssage } from '../types';
 import graphqlClient, { gql } from '../utils/graphqlClient';
 
@@ -74,6 +76,11 @@ export const useMessages = (channelId: string) => {
             id
             message
             createdAt
+            user {
+              id
+              name
+              avatar
+            }
           }
         }
       `,
@@ -81,4 +88,44 @@ export const useMessages = (channelId: string) => {
     );
     return res.getMessages;
   });
+};
+
+export const useSendMessage = () => {
+  const cache = useQueryCache();
+  const { user } = useAuth();
+  let channelId: string;
+  return useMutation(
+    async (data: SendMessageInputs) => {
+      const res = await graphqlClient.request<{ createMessage: IMesssage }>(
+        gql`
+          mutation createMessage($text: String!, $channelId: String!) {
+            createMessage(text: $text, channelId: $channelId) {
+              message {
+                id
+                message
+                createdAt
+              }
+            }
+          }
+        `,
+        data
+      );
+      return res.createMessage;
+    },
+    {
+      onMutate: (data) => {
+        const prevMessages = cache.getQueryData(['messages', data.channelId]);
+
+        cache.setQueryData(['messages', data.channelId], (old) => [
+          ...(old as IMesssage[]),
+          { id: 'temp-message', createdAt: new Date().toISOString(), user, ...data },
+        ]);
+
+        channelId = data.channelId;
+
+        return () => cache.setQueryData(['messages', data.channelId], prevMessages);
+      },
+      onSettled: () => cache.invalidateQueries(['messages', channelId]),
+    }
+  );
 };
