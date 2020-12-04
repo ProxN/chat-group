@@ -12,7 +12,9 @@ import {
   Root,
   Subscription,
 } from 'type-graphql';
+import { getConnection } from 'typeorm';
 import Message from '../../entities/Message';
+import User from '../../entities/User';
 import { Context } from '../../types/context';
 import { ErrorResponse } from '../../types/errorType';
 import * as messageErrors from './errors';
@@ -29,7 +31,14 @@ class MessageResolver {
   @Query(() => [Message])
   async getMessages(@Arg('channelId') channelId: string): Promise<Message[]> {
     if (!channelId) return [];
-    const messages = await Message.find({ where: { channelId } });
+    const messages = await getConnection()
+      .getRepository(Message)
+      .createQueryBuilder('m')
+      .where('m.channelId = :channelId', { channelId })
+      .leftJoinAndMapOne('m.user', User, 'u', 'u.id = m.userId')
+      .orderBy('m."createdAt"')
+      .getMany();
+
     return messages;
   }
 
@@ -56,7 +65,7 @@ class MessageResolver {
   }
 
   @Subscription({ topics: 'MESSAGE' })
-  messagesSubscription(@Root() message: Message): Message {
+  onMessageAdded(@Root() message: Message): Message {
     return message;
   }
 }

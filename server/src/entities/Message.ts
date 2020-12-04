@@ -33,6 +33,7 @@ class Message extends BaseEntity {
   @ManyToOne(() => Channel, (channel) => channel.messages)
   channel!: Channel;
 
+  @Field()
   @ManyToOne(() => User)
   user!: User;
 
